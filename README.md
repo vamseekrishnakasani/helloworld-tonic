@@ -96,12 +96,12 @@ Stop the server with `Ctrl+C`.
 helloworld-tonic/
 ├── Cargo.toml              # Package metadata, dependencies, and binary names
 ├── build.rs                # Generates Rust code from the .proto file
-├── server.rs               # Greeter gRPC server implementation
-├── client.rs               # Example Greeter gRPC client
+├── src/
+│   ├── server.rs           # Greeter gRPC server implementation
+│   ├── client.rs           # Example Greeter gRPC client
+│   └── main.rs             # Separate default package binary
 ├── proto/
 │   └── helloworld.proto    # Service, request, and response definitions
-└── src/
-    └── main.rs             # Separate default package binary
 ```
 
 The server and client are configured as named binaries in `Cargo.toml`:
@@ -109,11 +109,11 @@ The server and client are configured as named binaries in `Cargo.toml`:
 ```toml
 [[bin]]
 name = "helloworld-server"
-path = "server.rs"
+path = "src/server.rs"
 
 [[bin]]
 name = "helloworld-client"
-path = "client.rs"
+path = "src/client.rs"
 ```
 
 That is why they are started with `cargo run --bin helloworld-server` and
@@ -130,7 +130,7 @@ service Greeter {
 ```
 
 `build.rs` runs during the Cargo build and generates the Rust client and server
-types. The generated code is included by both `server.rs` and `client.rs`
+types. The generated code is included by both `src/server.rs` and `src/client.rs`
 through `tonic::include_proto!("helloworld")`; it is not checked into source
 control.
 
@@ -164,7 +164,8 @@ cargo clippy
 ### Address already in use
 
 Another process is already listening on port `50051`. Stop that process or
-change the address in both [`server.rs`](server.rs) and [`client.rs`](client.rs)
+change the address in both [`src/server.rs`](src/server.rs) and
+[`src/client.rs`](src/client.rs)
 to use the same available port.
 
 ### Connection refused
